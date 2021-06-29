@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<title th:text="#{admin_basis_jsp.title.header}"></title>
+</head>
+<div th:replace="header.html :: navigation"></div>
+<body>
+	<div>
+		<main class="m-3">
+			<div class="row col-sm-6">
+				<table class="table table-dark table-hover table-striped">
+					<caption th:text="#{student_courses.table.caption.not_active}">
+					</caption>
+					<thead class="thead-light">
+						<tr>
+							<th scope="col" th:text="#{admin_basis_jsp.table.colname.id}"></th>
+							<th scope="col" th:text="#{admin_basis_jsp.table.colname.course}"></th>
+							<th scope="col" th:text="#{admin_basis_jsp.table.colname.topic}"></th>
+							<th scope="col"
+								th:text="#{admin_basis_jsp.table.colname.teacher}"></th>
+							<th scope="col"
+								th:text="#{admin_basis_jsp.table.colname.start_date}"></th>
+							<th scope="col"
+								th:text="#{admin_basis_jsp.table.colname.stop_date}"></th>
+							<th scope="col" th:text="#{admin_basis_jsp.table.colname.descr}"></th>
+							<th scope="col"></th>
+							<th scope="col"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="allcources: ${allCourses}">
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.courseid}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.course}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.topic.topic}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.teacher.surname}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.dateStart}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.dateEnd}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.description}"></span></td>
+							<td><form
+									th:action="@{/courseedit/{courseId}/edit(courseId=${allcources.courseid})}"
+									method="post">
+									<button type="submit" class="btn btn-warning"
+										th:text="#{admin_basis_jsp.button.edit}"></button>
+								</form></td>
+							<td><form
+									th:action="@{/{courseId}/delete(courseId=${allcources.courseid})}"
+									method="post">
+									<button type="submit" class="btn btn-danger"
+										th:text="#{admin_basis_jsp.button.delete}"></button>
+								</form></td>
+						</tr>
+					</tbody>
+					<form th:action="@{/addCourse}" method="post">
+					<tr>
+						<td class="align-middle"></td>
+						<td class="align-middle"><input type="text"
+							placeholder="Course" name="course" required="required"></td>
+						<td class="align-middle"><select name="optionTopics"
+							required="required">
+								<option th:each="alltopics: ${allTopics}"
+									th:value="${alltopics.topicId}" th:text="${alltopics.topic}"></option>
+						</select></td>
+						<td class="align-middle"><select name="optionTeacher"
+							required="required">
+								<option th:each="allteachers: ${allTeachers}"
+									th:value="${allteachers.userid}"
+									th:text="${allteachers.surname}"></option>
+						</select></td>
+						<td><input id="dateStart" class="form-control" type="date"
+							th:value="${currentDate}" min="${currentDate}" max="2022-12-31"
+							name="dateStart" required="required"></td>
+						<td><input id="dateEnd" type="date" th:value="${currentDate}"
+							min="dateStart" max="2023-12-31" name="dateEnd"
+							required="required"></td>
+						<td><input type="text" placeholder="Description"
+							name="description" required="required"></td>
+						<td><button class="btn btn-success" type="submit"
+								th:text="#{admin_basis_jsp.button.add}"></button></td>
+					</tr>
+
+					</form>
+				</table>
+			</div>
+			<div
+				th:replace="pagination.html :: pagination(pageNumbers=${pageNumbers}, pageSize=${allCourses.size},
+ sortField=${sortField}, sortDir=${sortDir})"></div>
+		</main>
+		<div class="errors-div" th:if="${error != null}">
+			<div class="alert alert-danger" role="alert" th:text="${error}">
+			</div>
+		</div>
+	</div>
+	<script>
+		$("#dateEnd").change(function() {
+			var startDate = document.getElementById("dateStart").value;
+			var endDate = document.getElementById("dateEnd").value;
+
+			if ((Date.parse(endDate) <= Date.parse(startDate))) {
+				alert("End date should be greater than Start date");
+				document.getElementById("dateEnd").value = "";
+			}
+		});
+	</script>
+
+</body>
+</html>

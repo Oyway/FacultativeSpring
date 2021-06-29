@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{student_all_courses.title.header}"></title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<div th:replace="header.html :: navigation"></div>
+<body>
+	<div class="container">
+		<main class="m-3">
+			<form method="post" th:action="@{/allcourses}">
+				<select class="form-control" name="optionSort">
+					<option value="course,asc"
+						th:text="#{student_all_courses.option.sort.course_az}"></option>
+					<option value="course,desc"
+						th:text="#{student_all_courses.option.sort.course_za}"></option>
+					<option value="dateStart, "
+						th:text="#{student_all_courses.option.sort.time}"></option>
+					<option value=" , " th:text="#{student_all_courses.option.sort.none}"></option>
+				</select> <label for="topic" th:text="#{student_all_courses.lebel.topic}"></label><input
+					type="text" name="topic" th:value="${topic}"> <label for="teacher"
+					th:text="#{student_all_courses.lebel.teacher_surname}"></label><input
+					type="text" name="teacher" th:value="${teacher}">
+				<button class="input" type="submit" 
+					name="update"
+					th:text="#{student_all_courses.button.update}"></button>
+				<table class="table table-dark table-hover table-striped">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.course}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.topic}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.teacher}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.start_date}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.stop_date}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.descr}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.registration}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="allcources: ${allCourses}">
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.course}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.topic.topic}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.teacher.surname}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.dateStart}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.dateEnd}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.description}"></span></td>
+							<td class="align-middle"><input type="checkbox"
+								name="option" th:value="${allcources.courseid}"></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<button class="input" type="submit" formmethod="post"
+					formaction="/reg_course" name="reg"
+					th:text="#{student_all_courses.button.registration}">
+					<div class="errors-div" th:if="${regMessage != null}">
+						<div class="alert alert-danger" role="alert"
+							th:text="${regMessage}"></div>
+					</div>
+				</button>
+				<div
+					th:replace="pagination.html :: pagination(pageNumbers=${pageNumbers}, pageSize=${allCourses.size},
+ sortField=${sortField}, sortDir=${sortDir}, teacher=${teacher}, topic=${topic})"></div>
+			</form>
+
+		</main>
+	</div>
+</body>
+</html>

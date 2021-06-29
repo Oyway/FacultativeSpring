@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{admin_basis_jsp.title.header}"></title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<div th:replace="header.html :: navigation"></div>
+<body>
+	<div class="container">
+		<h1 th:text="#{courseedit_jsp.title.header}"></h1>
+		<br />
+		<form method="post" th:action="@{/editCourse}">
+			<input type="hidden" name="courseId" th:value="${courseId}"> <label
+				for="courseName" th:text="#{courseedit_jsp.lable.course}"></label><br />
+			<input type="text" name="courseName" th:value="${courseName}"><br />
+			<label for="optionTopics" th:text="#{courseedit_jsp.lable.topic}"></label><br />
+			<select name="optionTopics" required="required">
+				<option th:each="alltopics: ${allTopics}" th:selected="${alltopics.topicId==currentId}"
+					th:value="${alltopics.topicId}" th:text="${alltopics.topic}"></option>
+			</select><br /> <label for="optionTeacher"
+				th:text="#{courseedit_jsp.lable.teacher}"></label><br /> <select
+				name="optionTeacher" required="required">
+				<option th:each="allteachers: ${allTeachers}"
+					th:value="${allteachers.userid}" th:text="${allteachers.surname}"></option>
+			</select><br /> <label for="dateStart"
+				th:text="#{courseedit_jsp.lable.date_start}"></label><br /> <input
+				id="dateStart" type="date" name="dateStart" th:value="${dateStart}"
+				min="${currentDate}" max="2022-12-31"><br />
+			<label for="dateEnd" th:text="#{courseedit_jsp.lable.date_end}"></label><br />
+			<input type="date" name="dateEnd" min="${dateStart}"
+				th:value="${dateEnd}" max="2023-12-31"><br /> <label
+				for="description" th:text="#{courseedit_jsp.lable.descr}"></label><br />
+			<input type="text" name="description" th:value="${description}"
+				max="200"><br />
+			<button class="intput" type="submit"
+				th:text="#{courseedit_jsp.button.descr}"></button>
+
+		</form>
+	</div>
+</body>
+</html>

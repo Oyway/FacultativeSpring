@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Oops</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="../static/css/error.css" th:href="@{/css/error.css}" rel="stylesheet"/>
+</head>
+<div th:replace="header.html :: navigation"></div>
+<body>
+<div>
+    
+    <form class="info" th:action="@{/welcome}" method="get">
+        <h1 class="h3 mb-3 font-weight-normal" id="error-banner" th:text="#{error.wentWrong}"></h1>
+        <span class="text-info" th:text="${message}"></span>
+        <button type="submit" class="btn btn-primary" th:text="#{error.toMain}"></button>
+    </form>
+</div>
+</body>
+</html>

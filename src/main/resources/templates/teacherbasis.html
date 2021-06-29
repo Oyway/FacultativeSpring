@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{teacherbasis_jsp.title.header}"></title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<div th:replace="header.html :: navigation"></div>
+<body>
+	<div class="container">
+		<main class="m-3">
+			<div class="row col-md-6">
+				<table class="table table-dark table-hover table-striped">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.course}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.topic}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.start_date}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.stop_date}"></th>
+							<th scope="col"
+								th:text="#{student_all_courses.table.colname.descr}"></th>
+							<th scope="col"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="allcources: ${allCourses}">
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.course}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.topic.topic}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.dateStart}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.dateEnd}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${allcources.description}"></span></td>
+							<td class="align-middle"><form
+									th:action="@{/coursestudents/{courseId}/course(courseId=${allcources.courseid})}"
+									method="get">
+									<button type="submit" class="btn btn-warning"
+										th:text="#{admin_basis_jsp.button.edit}"></button>
+								</form></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div
+				th:replace="pagination.html :: pagination(pageNumbers=${pageNumbers}, pageSize=${allCourses.size},
+ sortField=${sortField}, sortDir=${optionSort})"></div>
+
+		</main>
+	</div>
+</body>
+</html>

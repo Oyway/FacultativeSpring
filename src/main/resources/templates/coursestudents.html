@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{teacherbasis_jsp.title.header}"></title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<div th:replace="header.html :: navigation"></div>
+<body>
+	<div class="container">
+		<main class="m-3">
+			<div class="row col-md-6">
+
+				<table class="table table-striped table-bordered table-sm">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col" th:text="#{teacherbasis_jsp.table.colname.id}"></th>
+							<th scope="col" th:text="#{teacherbasis_jsp.table.colname.name}"></th>
+							<th scope="col" th:text="#{teacherbasis_jsp.table.colname.mark}"></th>
+							<th scope="col"
+								th:text="#{teacherbasis_jsp.table.colname.change_mark}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="student: ${students}">
+							<td class="align-middle"><span class="align-middle"
+								th:text="${student.user.userid}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${student.user.firstName} + ${student.user.surname}"></span></td>
+							<td class="align-middle"><span class="align-middle"
+								th:text="${student.mark}"></span></td>
+							<td class="align-middle"><form method="post"
+									th:action="@{/setMark}">
+									<input type="hidden"  name="command" value="setMark" /> <input type="hidden"
+										 name="studentid" th:value="${student.user.userid}" />
+									<input type="hidden" name="courseid"
+										th:value="${student.course.courseid}" /> <input type="number"
+										name="mark" size="3" min="0" max="100" th:value="0" />
+									<button class="input" type="submit"
+										th:text="#{teacherbasis_jsp.button.change}"></button>
+								</form></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div
+				th:replace="pagination.html :: pagination(pageNumbers=${pageNumbers}, pageSize=${students.size},
+ sortField=${sortField}, sortDir=${sortDir})"></div>
+		</main>
+	</div>
+</body>
+</html>
