@@ -19,18 +19,18 @@
 		<h1 th:text="#{courseedit_jsp.title.header}"></h1>
 		<br />
 		<form method="post" th:action="@{/editCourse}">
-			<input type="hidden" name="courseId" th:value="${courseId}"> <label
+			<input type="hidden" name="courseId" th:value="${id}"> <label
 				for="courseName" th:text="#{courseedit_jsp.lable.course}"></label><br />
 			<input type="text" name="courseName" th:value="${courseName}"><br />
 			<label for="optionTopics" th:text="#{courseedit_jsp.lable.topic}"></label><br />
 			<select name="optionTopics" required="required">
 				<option th:each="alltopics: ${allTopics}" th:selected="${alltopics.topicId==currentId}"
-					th:value="${alltopics.topicId}" th:text="${alltopics.topic}"></option>
+					th:value="${alltopics.id}" th:text="${alltopics.topic}"></option>
 			</select><br /> <label for="optionTeacher"
 				th:text="#{courseedit_jsp.lable.teacher}"></label><br /> <select
 				name="optionTeacher" required="required">
 				<option th:each="allteachers: ${allTeachers}"
-					th:value="${allteachers.userid}" th:text="${allteachers.surname}"></option>
+					th:value="${allteachers.id}" th:text="${allteachers.surname}"></option>
 			</select><br /> <label for="dateStart"
 				th:text="#{courseedit_jsp.lable.date_start}"></label><br /> <input
 				id="dateStart" type="date" name="dateStart" th:value="${dateStart}"

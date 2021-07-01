@@ -29,6 +29,12 @@ import org.springframework.security.web.session.SessionInformationExpiredStrateg
 
 import ua.svinkov.facultative.service.UserServiceImpl;
 
+/**
+ * Configuration for web security 
+ * 
+ * @author R. Svinkov
+ *
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -64,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		httpSecurity.sessionManagement().sessionAuthenticationStrategy(concurrentSession()).maximumSessions(-1)
 				.expiredSessionStrategy(sessionInformationExpiredStrategy());
-		// httpSecurity.csrf().disable();
+
 		httpSecurity.headers().frameOptions().disable();
 	}
 

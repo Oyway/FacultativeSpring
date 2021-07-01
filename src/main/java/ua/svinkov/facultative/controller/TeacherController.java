@@ -21,13 +21,14 @@ import ua.svinkov.facultative.entity.UserCourses;
 import ua.svinkov.facultative.service.CoursesService;
 import ua.svinkov.facultative.service.UserService;
 import ua.svinkov.facultative.util.ModelHelper;
+import ua.svinkov.facultative.util.PageRequestHelper;
 
 @Controller
 public class TeacherController {
 
 	private final Logger log = LogManager.getLogger(StudentController.class);
 
-	private final CoursesService coursesService;
+	private final CoursesService coursesService; 
 	private final UserService userService;
 
 	@Autowired
@@ -41,7 +42,8 @@ public class TeacherController {
 			@RequestParam("size") Optional<Integer> size, @RequestParam("optionSort") Optional<String> sort) {
 		User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		ua.svinkov.facultative.entity.User user = userService.findUserByLogin(userDetails.getUsername());
-		Page<Course> courses = coursesService.findCoursesByTeacherId(user.getUserid(), page, size);
+		Page<Course> courses = coursesService.findCoursesByTeacherId(user.getId(),
+				PageRequestHelper.createPageRequest(page, size, Optional.empty(), Optional.empty()));
 		log.trace("Found in DB: allCourses --> {}" + courses.get().collect(Collectors.toList()));
 
 		model.addAttribute("allCourses", courses);
@@ -52,7 +54,8 @@ public class TeacherController {
 	@GetMapping("/coursestudents/{courseId}/course")
 	public String getCourseStudentsPage(Model model, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size, @PathVariable Long courseId) {
-		Page<UserCourses> userCourses = coursesService.findStudentsByCourseId(courseId, page, size);
+		Page<UserCourses> userCourses = coursesService.findStudentsByCourseId(courseId,
+				PageRequestHelper.createPageRequest(page, size, Optional.empty(), Optional.empty()));
 		model.addAttribute("students", userCourses);
 		ModelHelper.setPaginationAttributes(model, page, userCourses);
 		return "coursestudents";

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,13 @@ import ua.svinkov.facultative.repository.CourseRepository;
 import ua.svinkov.facultative.repository.CourseSortRepository;
 import ua.svinkov.facultative.repository.CoursesRepository;
 import ua.svinkov.facultative.repository.TopicRepository;
-import ua.svinkov.facultative.util.Constants;
 
+/**
+ * Implementation of course service for manage courses
+ * 
+ * @author R. Svinkov
+ *
+ */
 @Service
 public class CoursesServiceImpl implements CoursesService {
 
@@ -37,7 +41,7 @@ public class CoursesServiceImpl implements CoursesService {
 
 	@Override
 	public List<UserCourses> findAllByStudentId(Long studentId) {
-		return coursesRepository.findAllByUserUserid(studentId);
+		return coursesRepository.findAllByUserId(studentId);
 	}
 
 	@Override
@@ -53,13 +57,12 @@ public class CoursesServiceImpl implements CoursesService {
 
 	@Override
 	public UserCourses findAllByStudentAndCourseId(Long studentId, Long courseId) {
-		return coursesRepository.findAllByUserUseridAndCourseCourseid(studentId, courseId);
+		return coursesRepository.findAllByUserIdAndCourseId(studentId, courseId);
 	}
 
 	@Override
-	public Page<Course> findAllCourses(Optional<Integer> page, Optional<Integer> size) {
-		return courseRepository.findAll(PageRequest.of(page.orElse(Constants.DEFAULT_CURRENT_PAGE) - 1,
-				size.orElse(Constants.DEFAULT_PAGE_SIZE)));
+	public Page<Course> findAllCourses(Pageable page) {
+		return courseRepository.findAll(page);
 	}
 
 	@Override
@@ -89,20 +92,13 @@ public class CoursesServiceImpl implements CoursesService {
 	}
 
 	@Override
-	public Page<Course> findCoursesByTeacherId(Long id, Optional<Integer> page, Optional<Integer> size) {
-		return courseRepository.findAllByTeacherUserid(id, PageRequest
-				.of(page.orElse(Constants.DEFAULT_CURRENT_PAGE) - 1, size.orElse(Constants.DEFAULT_PAGE_SIZE)));
+	public Page<Course> findCoursesByTeacherId(Long id, Pageable page) {
+		return courseRepository.findAllByTeacherId(id, page);
 	}
 
 	@Override
-	public Page<UserCourses> findStudentsByCourseId(Long id, Optional<Integer> page, Optional<Integer> size) {
-		return coursesRepository.findAllByCourseCourseid(id, PageRequest
-				.of(page.orElse(Constants.DEFAULT_CURRENT_PAGE) - 1, size.orElse(Constants.DEFAULT_PAGE_SIZE)));
-	}
-
-	@Override
-	public Page<Course> findAllCourses(PageRequest page) {
-		return courseSortRepository.findAll(page);
+	public Page<UserCourses> findStudentsByCourseId(Long id, Pageable page) {
+		return coursesRepository.findAllByCourseId(id, page);
 	}
 
 	@Override

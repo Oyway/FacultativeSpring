@@ -1,7 +1,7 @@
 package ua.svinkov.facultative.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +14,6 @@ import ua.svinkov.facultative.entity.Role;
 import ua.svinkov.facultative.entity.User;
 import ua.svinkov.facultative.repository.RoleRepository;
 import ua.svinkov.facultative.repository.UserRepository;
-import ua.svinkov.facultative.util.Constants;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,6 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of service for managing users
+ * 
+ * @author R. Svinkov
+ *
+ */
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
@@ -73,9 +78,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 //
 	@Override
-	public Page<User> findAllUsers(Optional<Integer> page, Optional<Integer> size) {
-		return userRepository.findAll(PageRequest.of(page.orElse(Constants.DEFAULT_CURRENT_PAGE) - 1,
-				size.orElse(Constants.DEFAULT_PAGE_SIZE)));
+	public Page<User> findAllUsers(Pageable page) {
+		return userRepository.findAll(page);
 	}
 
 	@Override

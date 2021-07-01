@@ -3,6 +3,12 @@ package ua.svinkov.facultative.service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of service for password managing
+ * 
+ * @author R. Svinkov
+ *
+ */
 @Service
 public class PasswordServiceImpl implements PasswordService {
 

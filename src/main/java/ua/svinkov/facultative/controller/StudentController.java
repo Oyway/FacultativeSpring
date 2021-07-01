@@ -34,6 +34,8 @@ public class StudentController {
 	private final CoursesService coursesService;
 	private final UserService userService;
 
+	private String message;
+
 	@Autowired
 	public StudentController(CoursesService coursesService, UserService userService) {
 		this.userService = userService;
@@ -44,7 +46,7 @@ public class StudentController {
 	public String getStudentPage(Model model) {
 		User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		ua.svinkov.facultative.entity.User user = userService.findUserByLogin(userDetails.getUsername());
-		List<UserCourses> courses = coursesService.findAllByStudentId(user.getUserid());
+		List<UserCourses> courses = coursesService.findAllByStudentId(user.getId());
 		log.trace("Found in DB: user --> " + user);
 
 		List<UserCourses> coursesNotStarted = courses.stream()
@@ -93,7 +95,8 @@ public class StudentController {
 			courses = coursesService
 					.findAllCourses(PageRequestHelper.createPageRequest(page, size, sortField, sortDir));
 		} else {
-			courses = coursesService.findAllCourses(page, size);
+			courses = coursesService.findAllCourses(
+					PageRequestHelper.createPageRequest(page, size, Optional.empty(), Optional.empty()));
 		}
 
 		log.trace("{}", courses);
@@ -105,6 +108,9 @@ public class StudentController {
 		} else {
 			ModelHelper.setPaginationAttributes(model, page, courses);
 		}
+		log.trace("{} " + message);
+		model.addAttribute("regMessage", message);
+		message = null;
 		return "studentAllCourses";
 	}
 
@@ -117,7 +123,7 @@ public class StudentController {
 		model.addAttribute("email", user.getEmail());
 		model.addAttribute("firstName", user.getFirstName());
 		model.addAttribute("surname", user.getSurname());
-		return "profile";
+		return "profile"; 
 	}
 
 	@PostMapping("/allcourses")
@@ -148,7 +154,9 @@ public class StudentController {
 		}
 
 		model.addAttribute("allCourses", courses);
-
+		log.trace("{} " + message);
+		model.addAttribute("regMessage", message);
+		message = null;
 		ModelHelper.setSortingPaginationAttributes(model, page, sortField, sortDir, courses);
 		return "studentAllCourses";
 
@@ -168,8 +176,8 @@ public class StudentController {
 		for (int i = 0; i < id.get().length; i++) {
 			UserCourses courses = new UserCourses();
 			courses.setUser(userService.findUserByLogin(userDetails.getUsername()));
-			courses.setCourse(Course.builder().courseid(Long.parseLong(id.get()[i])).build());
-			if (Objects.isNull(coursesService.findAllByStudentAndCourseId(courses.getUser().getUserid(),
+			courses.setCourse(Course.builder().id(Long.parseLong(id.get()[i])).build());
+			if (Objects.isNull(coursesService.findAllByStudentAndCourseId(courses.getUser().getId(),
 					Long.parseLong(id.get()[i])))) {
 				log.trace("Insert in DB: users_courses --> {} " + courses);
 				coursesService.create(courses);
@@ -179,8 +187,9 @@ public class StudentController {
 				regMessage.append("Already registred to course ").append(Integer.parseInt(id.get()[i])).append(" ");
 			}
 		}
-		log.trace("{} " + regMessage);
-		model.addAttribute("regMessage", regMessage);
+
+		message = regMessage.toString();
+
 		return forward;
 	}
 }

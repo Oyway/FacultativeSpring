@@ -28,6 +28,7 @@ import ua.svinkov.facultative.entity.User;
 import ua.svinkov.facultative.service.CoursesService;
 import ua.svinkov.facultative.service.UserService;
 import ua.svinkov.facultative.util.ModelHelper;
+import ua.svinkov.facultative.util.PageRequestHelper;
 
 @Controller
 public class AdminController {
@@ -60,7 +61,8 @@ public class AdminController {
 	@GetMapping("/admin")
 	public String getStudentPage(Model model, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
-		Page<Course> courses = coursesService.findAllCourses(page, size);
+		Page<Course> courses = coursesService
+				.findAllCourses(PageRequestHelper.createPageRequest(page, size, Optional.empty(), Optional.empty()));
 		List<Topic> topics = coursesService.findAllTopics();
 		List<User> teachers = userService.findAllByRole(3L);
 		log.trace("Found in DB: allCourses --> {}" + courses.get().collect(Collectors.toList()));
@@ -75,7 +77,8 @@ public class AdminController {
 	public String deleteCourse(Model model, @PathVariable Long courseId, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
 		coursesService.delete(courseId);
-		Page<Course> courses = coursesService.findAllCourses(page, size);
+		Page<Course> courses = coursesService
+				.findAllCourses(PageRequestHelper.createPageRequest(page, size, Optional.empty(), Optional.empty()));
 		log.trace("Found in DB: allCourses --> {}" + courses.get().collect(Collectors.toList()));
 		model.addAttribute("allCourses", courses);
 		ModelHelper.setPaginationAttributes(model, page, courses);
@@ -91,8 +94,8 @@ public class AdminController {
 		LocalDate dateEnd = LocalDate.parse(request.getParameter(PARAM_DATE_END));
 		String description = request.getParameter(PARAM_DESCRIPTION);
 
-		Course newCourse = Course.builder().course(course).topic(Topic.builder().topicId(topicId).build())
-				.teacher(User.builder().userid(teacher).build()).dateStart(dateStart).dateEnd(dateEnd)
+		Course newCourse = Course.builder().course(course).topic(Topic.builder().id(topicId).build())
+				.teacher(User.builder().id(teacher).build()).dateStart(dateStart).dateEnd(dateEnd)
 				.description(description).build();
 		coursesService.create(newCourse);
 		return "redirect:/admin";
@@ -108,10 +111,10 @@ public class AdminController {
 
 		model.addAttribute("allTopics", topics);
 		model.addAttribute("allTeachers", teachers);
-		model.addAttribute(PARAM_COURSE_ID, course.getCourseid());
+		model.addAttribute(PARAM_COURSE_ID, course.getId());
 		model.addAttribute(PARAM_COURSE_NAME, course.getCourse());
-		model.addAttribute("currentId", course.getTopic().getTopicId());
-		model.addAttribute(PARAM_OPTION_TEACHER, course.getTeacher().getUserid());
+		model.addAttribute("currentId", course.getTopic().getId());
+		model.addAttribute(PARAM_OPTION_TEACHER, course.getTeacher().getId());
 		model.addAttribute(PARAM_DATE_START, course.getDateStart());
 		model.addAttribute(PARAM_DATE_END, course.getDateEnd());
 		model.addAttribute(PARAM_DESCRIPTION, course.getDescription());
@@ -120,10 +123,10 @@ public class AdminController {
 
 	@PostMapping("/editCourse")
 	public String editCourse(Model model, HttpServletRequest request) {
-		Course course = Course.builder().courseid(Long.parseLong(request.getParameter(PARAM_COURSE_ID)))
+		Course course = Course.builder().id(Long.parseLong(request.getParameter(PARAM_COURSE_ID)))
 				.course(request.getParameter(PARAM_COURSE_NAME))
-				.topic(Topic.builder().topicId(Long.parseLong(request.getParameter(PARAM_OPTION_TOPICS))).build())
-				.teacher(User.builder().userid(Long.parseLong(request.getParameter(PARAM_OPTION_TEACHER))).build())
+				.topic(Topic.builder().id(Long.parseLong(request.getParameter(PARAM_OPTION_TOPICS))).build())
+				.teacher(User.builder().id(Long.parseLong(request.getParameter(PARAM_OPTION_TEACHER))).build())
 				.dateStart(LocalDate.parse(request.getParameter(PARAM_DATE_START)))
 				.dateEnd(LocalDate.parse(request.getParameter(PARAM_DATE_END)))
 				.description(request.getParameter(PARAM_DESCRIPTION)).build();
@@ -134,7 +137,8 @@ public class AdminController {
 	@GetMapping("/users")
 	public String getUsersPage(Model model, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
-		Page<User> users = userService.findAllUsers(page, size);
+		Page<User> users = userService
+				.findAllUsers(PageRequestHelper.createPageRequest(page, size, Optional.empty(), Optional.empty()));
 		log.trace("Found in DB: allCourses --> {}" + users.get().collect(Collectors.toList()));
 		model.addAttribute("allUsers", users);
 		model.addAttribute("allRoles", userService.findAllRoles());
@@ -147,17 +151,7 @@ public class AdminController {
 		User blockUser = userService.findUserById(userId).get();
 		blockUser.setStatus(false);
 		userService.create(blockUser);
-		final List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
-		for (final Object principal : allPrincipals) {
-			if (principal instanceof org.springframework.security.core.userdetails.User) {
-				final org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
-				if (blockUser.getLogin().equals(user.getUsername())) {
-					for (SessionInformation information : sessionRegistry.getAllSessions(user, true)) {
-						information.expireNow();
-					}
-				}
-			}
-		}
+		stopSession(blockUser);
 		return "redirect:/users";
 	}
 
@@ -166,17 +160,7 @@ public class AdminController {
 		User blockUser = userService.findUserById(userId).get();
 		blockUser.setStatus(true);
 		userService.create(blockUser);
-		final List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
-		for (final Object principal : allPrincipals) {
-			if (principal instanceof org.springframework.security.core.userdetails.User) {
-				final org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
-				if (blockUser.getLogin().equals(user.getUsername())) {
-					for (SessionInformation information : sessionRegistry.getAllSessions(user, true)) {
-						information.expireNow();
-					}
-				}
-			}
-		}
+		stopSession(blockUser);
 		return "redirect:/users";
 	}
 
@@ -187,17 +171,22 @@ public class AdminController {
 		log.trace("Role - > ", role.get());
 		updateUser.setRole(role.get());
 		userService.create(updateUser);
+		stopSession(updateUser);
+		return "redirect:/users";
+	}
+	
+	
+	private void stopSession(User stopUser) {
 		final List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
 		for (final Object principal : allPrincipals) {
 			if (principal instanceof org.springframework.security.core.userdetails.User) {
 				final org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
-				if (updateUser.getLogin().equals(user.getUsername())) {
+				if (stopUser.getLogin().equals(user.getUsername())) {
 					for (SessionInformation information : sessionRegistry.getAllSessions(user, true)) {
 						information.expireNow();
 					}
 				}
 			}
 		}
-		return "redirect:/users";
 	}
 }

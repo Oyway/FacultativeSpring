@@ -10,9 +10,9 @@ import ua.svinkov.facultative.entity.UserCourses;
 
 public interface CoursesRepository extends JpaRepository<UserCourses, Long> {
 	
-	List<UserCourses> findAllByUserUserid(Long studentId);
+	List<UserCourses> findAllByUserId(Long studentId);
 
-	UserCourses findAllByUserUseridAndCourseCourseid(Long studentId, Long courseId);
+	UserCourses findAllByUserIdAndCourseId(Long studentId, Long courseId);
 
-	Page<UserCourses> findAllByCourseCourseid(Long id, Pageable pageable);
+	Page<UserCourses> findAllByCourseId(Long id, Pageable pageable);
 }

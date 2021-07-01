@@ -1,6 +1,5 @@
 package ua.svinkov.facultative.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -32,13 +31,13 @@ class CoursesServiceImplTest {
     @Test
     void findAllByStudentAndCourseId() {
         service.findAllByStudentAndCourseId(1L, 1L);
-        verify(coursesRep, times(1)).findAllByUserUseridAndCourseCourseid(1L, 1L);
+        verify(coursesRep, times(1)).findAllByUserIdAndCourseId(1L, 1L);
     }
     
     @Test
     void findAllByStudentId() {
         service.findAllByStudentId(1L);
-        verify(coursesRep, times(1)).findAllByUserUserid(1L);
+        verify(coursesRep, times(1)).findAllByUserId(1L);
     }
 
     @Test

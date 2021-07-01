@@ -31,7 +31,7 @@ public class Topic implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long topicId;
+	private Long id;
 
 	@Column(nullable = false)
 	private String topic;

@@ -8,7 +8,7 @@ import ua.svinkov.facultative.entity.Course;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
-	Page<Course> findAllByTeacherUserid(Long clientId, Pageable pageable);
+	Page<Course> findAllByTeacherId(Long clientId, Pageable pageable);
 	
 	
 

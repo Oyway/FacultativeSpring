@@ -32,7 +32,7 @@
 					<tbody>
 						<tr th:each="student: ${students}">
 							<td class="align-middle"><span class="align-middle"
-								th:text="${student.user.userid}"></span></td>
+								th:text="${student.user.id}"></span></td>
 							<td class="align-middle"><span class="align-middle"
 								th:text="${student.user.firstName} + ${student.user.surname}"></span></td>
 							<td class="align-middle"><span class="align-middle"
@@ -40,9 +40,9 @@
 							<td class="align-middle"><form method="post"
 									th:action="@{/setMark}">
 									<input type="hidden"  name="command" value="setMark" /> <input type="hidden"
-										 name="studentid" th:value="${student.user.userid}" />
+										 name="studentid" th:value="${student.user.id}" />
 									<input type="hidden" name="courseid"
-										th:value="${student.course.courseid}" /> <input type="number"
+										th:value="${student.course.id}" /> <input type="number"
 										name="mark" size="3" min="0" max="100" th:value="0" />
 									<button class="input" type="submit"
 										th:text="#{teacherbasis_jsp.button.change}"></button>

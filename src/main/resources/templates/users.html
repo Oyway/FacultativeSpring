@@ -34,7 +34,7 @@
 					<tbody>
 						<tr th:each="users: ${allUsers}">
 							<td class="align-middle"><span class="align-middle"
-								th:text="${users.userid}"></span></td>
+								th:text="${users.id}"></span></td>
 							<td class="align-middle"><span class="align-middle"
 								th:text="${users.login}"></span></td>
 							<td class="align-middle"><span class="align-middle"
@@ -48,7 +48,7 @@
 							<td class="align-middle"><span class="align-middle"
 								th:text="${users.status}"></span></td>
 							<form
-								th:action="@{/users/{userId}/update(userId=${users.userid})}"
+								th:action="@{/users/{userId}/update(userId=${users.id})}"
 								method="post">
 								<td><select name="optionRoles">
 										<option th:each="allroles: ${allRoles}"
@@ -61,7 +61,7 @@
 							</form>
 							<div th:if="${users.status == true}">
 								<form
-									th:action="@{/users/{userId}/block(userId=${users.userid})}"
+									th:action="@{/users/{userId}/block(userId=${users.id})}"
 									method="post">
 									<button class="input" type="submit" name="status"
 										th:text="#{users_jsp.button.block}"></button>
@@ -69,7 +69,7 @@
 							</div>
 							<div th:if="${users.status == false}">
 								<form
-									th:action="@{/users/{userId}/unblock(userId=${users.userid})}"
+									th:action="@{/users/{userId}/unblock(userId=${users.id})}"
 									method="post">
 									<button class="input" type="submit" name="status"
 										th:text="#{users_jsp.button.unblock}"></button>

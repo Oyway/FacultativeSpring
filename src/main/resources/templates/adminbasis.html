@@ -41,7 +41,7 @@
 					<tbody>
 						<tr th:each="allcources: ${allCourses}">
 							<td class="align-middle"><span class="align-middle"
-								th:text="${allcources.courseid}"></span></td>
+								th:text="${allcources.id}"></span></td>
 							<td class="align-middle"><span class="align-middle"
 								th:text="${allcources.course}"></span></td>
 							<td class="align-middle"><span class="align-middle"
@@ -55,13 +55,13 @@
 							<td class="align-middle"><span class="align-middle"
 								th:text="${allcources.description}"></span></td>
 							<td><form
-									th:action="@{/courseedit/{courseId}/edit(courseId=${allcources.courseid})}"
+									th:action="@{/courseedit/{courseId}/edit(courseId=${allcources.id})}"
 									method="post">
 									<button type="submit" class="btn btn-warning"
 										th:text="#{admin_basis_jsp.button.edit}"></button>
 								</form></td>
 							<td><form
-									th:action="@{/{courseId}/delete(courseId=${allcources.courseid})}"
+									th:action="@{/{courseId}/delete(courseId=${allcources.id})}"
 									method="post">
 									<button type="submit" class="btn btn-danger"
 										th:text="#{admin_basis_jsp.button.delete}"></button>

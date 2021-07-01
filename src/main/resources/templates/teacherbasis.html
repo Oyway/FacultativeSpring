@@ -47,7 +47,7 @@
 							<td class="align-middle"><span class="align-middle"
 								th:text="${allcources.description}"></span></td>
 							<td class="align-middle"><form
-									th:action="@{/coursestudents/{courseId}/course(courseId=${allcources.courseid})}"
+									th:action="@{/coursestudents/{courseId}/course(courseId=${allcources.id})}"
 									method="get">
 									<button type="submit" class="btn btn-warning"
 										th:text="#{admin_basis_jsp.button.edit}"></button>

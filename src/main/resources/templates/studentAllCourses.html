@@ -67,7 +67,7 @@
 							<td class="align-middle"><span class="align-middle"
 								th:text="${allcources.description}"></span></td>
 							<td class="align-middle"><input type="checkbox"
-								name="option" th:value="${allcources.courseid}"></td>
+								name="option" th:value="${allcources.id}"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -75,11 +75,12 @@
 				<button class="input" type="submit" formmethod="post"
 					formaction="/reg_course" name="reg"
 					th:text="#{student_all_courses.button.registration}">
-					<div class="errors-div" th:if="${regMessage != null}">
-						<div class="alert alert-danger" role="alert"
+					
+				</button>
+				<div th:if="${regMessage != null}">
+						<div class="bg-info text-white" role="alert"
 							th:text="${regMessage}"></div>
 					</div>
-				</button>
 				<div
 					th:replace="pagination.html :: pagination(pageNumbers=${pageNumbers}, pageSize=${allCourses.size},
  sortField=${sortField}, sortDir=${sortDir}, teacher=${teacher}, topic=${topic})"></div>

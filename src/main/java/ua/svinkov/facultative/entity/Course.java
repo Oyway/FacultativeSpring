@@ -33,7 +33,7 @@ public class Course implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long courseid;
+	private Long id;
 
 	@Column(nullable = false)
 	private String course;
